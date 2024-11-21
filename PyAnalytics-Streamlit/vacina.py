@@ -125,7 +125,7 @@ def exibir():
     }
 
     # Leitura do arquivo CSV
-    cobertura_ararangua = pd.read_csv('cobertura_vacinal_ararangua_atualizado.csv', index_col=0)
+    cobertura_ararangua = pd.read_csv('PyAnalytics-Streamlit/cobertura_vacinal_ararangua_atualizado.csv', index_col=0)
 
     # Converter índice para numérico
     cobertura_ararangua.index = pd.to_numeric(cobertura_ararangua.index)
