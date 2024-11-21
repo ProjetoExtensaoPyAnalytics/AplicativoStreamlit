@@ -37,7 +37,7 @@ def agrupar_apresentacao(apresentacao):
         return "Outros"
 
 def exibir():
-    path = "Planilha-REMUME.xlsx"
+    path = "PyAnalytics-Streamlit/Planilha-REMUME.xlsx"
     df = pd.read_excel(path)
 
     #menu para navegar
