@@ -10,8 +10,8 @@ import medicamentos
 
 #página inicial
 def pagina_inicial():
-    logo_esquerda = Image.open("logo-py.png")
-    logo_direita = Image.open("logo-ufsc.png")
+    logo_esquerda = Image.open("PyAnalytics-Streamlit/logo-py.png")
+    logo_direita = Image.open("PyAnalytics-Streamlit/logo-ufsc.png")
 
     col1, col2, col3 = st.columns([1, 6, 1])
 
