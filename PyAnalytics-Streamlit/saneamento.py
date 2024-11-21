@@ -8,17 +8,12 @@ def exibir():
     data = data.drop(columns=["grupo", "subgrupo"])
 
     # sidebar
-    st.sidebar.title("Saneamento em Araranguá")
-    st.sidebar.markdown(
-        "Dados sobre saneamento básico e saúde pública em Araranguá, SC."
-    )
+    st.sidebar.title("Saneamento")
     visualizacao = st.sidebar.radio(
         "Escolha a visualização",
         [
             "Cobertura de Abastecimento de Água",
             "Cobertura de Coleta de Esgoto",
-            "Internações",
-            "Óbitos",
         ],
     )
 
@@ -115,66 +110,10 @@ def exibir():
         fig.update_xaxes(tickmode='linear')
         st.plotly_chart(fig)
 
-
-    if visualizacao == "Internações":
-        st.title("Internações Hospitalares")
-        st.write(
-            "Esse painel apresenta as internações hospitalares em Araranguá, SC. As internações hospitalares são um indicador importante da saúde da população e refletem a necessidade de cuidados médicos e hospitalares. A análise das internações por faixa etária e por doenças específicas pode fornecer informações valiosas sobre as condições de saúde da população e as necessidades de atendimento médico. Identificar as faixas etárias mais afetadas por internações hospitalares pode ajudar a priorizar esforços em políticas de saúde e a proteger as populações mais vulneráveis. Além disso, a análise das tendências ao longo do tempo pode revelar mudanças na incidência de doenças e a eficácia das intervenções de saúde pública. A redução das internações hospitalares é um objetivo importante para melhorar a saúde da população e reduzir os custos do sistema de saúde."
-        )
-
-        age_range = st.slider("Faixa etária", 0, 99, (0, 99), 1)
-        year_range = st.slider("Ano", data["ano"].min(), data["ano"].max(), (data["ano"].min(), data["ano"].max()), 1)
-        only_respiratory = st.checkbox("Apenas respiratórias")
-        absolute = st.checkbox("Valores absolutos (sem classificação)")
-
-
-        initial_age = age_range[0]
-        final_age = age_range[1]
-
-        string_to_search = "Internações por doenças respiratórias" if only_respiratory else "Internações"
-        hospitalizations = data[data["indicador"].str.contains(string_to_search)]
-
-        age_ranges = hospitalizations["indicador"].str.extract(r"(\d+) a (\d+) anos")
-        hospitalizations["idade_min"] = pd.to_numeric(age_ranges[0], errors='coerce')
-        hospitalizations["idade_max"] = pd.to_numeric(age_ranges[1], errors='coerce')
-
-        hospitalizations = hospitalizations.dropna(subset=["idade_min", "idade_max"])
-        hospitalizations = hospitalizations[((hospitalizations["idade_min"] >= initial_age) | (hospitalizations["idade_max"] >= initial_age)) & ((hospitalizations["idade_min"] <= final_age) | (hospitalizations["idade_max"] <= final_age))]
-
-        hospitalizations = hospitalizations.groupby(["ano", "idade_min", "idade_max"])["valor"].sum().reset_index()
-        hospitalizations["faixa_etaria"] = hospitalizations.apply(lambda row: f"{int(row['idade_min'])} a {int(row['idade_max'])}", axis=1)
-        hospitalizations = hospitalizations[(hospitalizations["ano"] >= year_range[0]) & (hospitalizations["ano"] <= year_range[1])]
-        if  absolute:
-            hospitalizations = hospitalizations.groupby(["ano"])["valor"].sum().reset_index()
-            fig = px.line(hospitalizations, x="ano", y="valor", title="Internações hospitalares")
-        else:
-            fig = px.line(hospitalizations, x="ano", y="valor", color="faixa_etaria", title="Internações hospitalares por faixa etária")
-        fig.update_layout(xaxis_title="Ano", yaxis_title="Internações")
-        fig.update_traces(mode="lines+markers")
-        fig.update_xaxes(tickmode='linear')
-        st.plotly_chart(fig)
-
-    if visualizacao == "Óbitos":
-        st.title("Óbitos")
-        st.write(
-            "Esse painel apresenta os óbitos em Araranguá, SC. Os óbitos são um indicador crítico da saúde da população e refletem a incidência de doenças e condições de saúde. A análise dos óbitos por causa específica pode fornecer informações valiosas sobre as principais causas de morte e as tendências de saúde da população. Identificar as causas de óbito mais comuns pode ajudar a priorizar esforços em políticas de saúde e a prevenir mortes evitáveis. Além disso, a análise das tendências ao longo do tempo pode revelar mudanças na incidência de doenças e a eficácia das intervenções de saúde pública. A redução dos óbitos é um objetivo importante para melhorar a saúde da população e prevenir mortes prematuras."
-        )
-        year_range = st.slider("Ano", data["ano"].min(), data["ano"].max(), (data["ano"].min(), data["ano"].max()), 1)
-        types = ["Doenças Respiratórias", "Doenças de Veiculação Hídrica", "Todas"]
-        cause = st.selectbox("Causa", types)
-
-        deaths = data[data["indicador"].str.contains("Óbitos")]
-        deaths["ano"] = deaths["ano"].astype(int)
-        deaths = deaths[deaths["ano"].between(year_range[0], year_range[1])]
-
-        if cause == "Doenças Respiratórias":
-            deaths = deaths[deaths["indicador"].str.contains("respiratórias")]
-        elif cause == "Doenças de Veiculação Hídrica":
-            deaths = deaths[deaths["indicador"].str.contains("hídrica")]
-
-        deaths = deaths.groupby(["ano"])["valor"].sum().reset_index()
-
-        fig = px.line(deaths, x="ano", y="valor", title="Óbitos")
-        fig.update_layout(xaxis_title="Ano", yaxis_title="Óbitos")
-        fig.update_traces(mode="lines+markers")
-        st.plotly_chart(fig)
+    st.markdown("---")
+    st.write("""
+    **Fonte dos dados:** [TRATABRASIL](https://tratabrasil.org.br/principais-estatisticas/dados-regionais/)
+    """)
+    st.write("""
+    **Página feita por: [Matheus](https://github.com/matheuskolln)** 
+    """)
