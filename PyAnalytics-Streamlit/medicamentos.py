@@ -138,8 +138,7 @@ def exibir():
 
     st.markdown("---")
     st.write("""
-    **Fonte dos dados:** 
-    - [REMUME](http://saude.ararangua.sc.gov.br:81/site/images/arquivos/REMUME.pdf)
+    **Fonte dos dados:** [REMUME](http://saude.ararangua.sc.gov.br:81/site/images/arquivos/REMUME.pdf)
     """)
     st.write("""
     **Página feita por: [Rodrigo Guedes](https://www.linkedin.com/in/rodrigo-guedes-/)** 
