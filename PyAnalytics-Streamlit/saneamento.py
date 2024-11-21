@@ -3,7 +3,7 @@ import plotly.express as px
 import pandas as pd
 
 def exibir():
-    path = "indicadores_saneamento.csv"
+    path = "PyAnalytics-Streamlit/indicadores_saneamento.csv"
     data = pd.read_csv(path)
     data = data.drop(columns=["grupo", "subgrupo"])
 
