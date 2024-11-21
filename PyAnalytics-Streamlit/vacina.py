@@ -385,3 +385,6 @@ def exibir():
     - [DATASUS - Imunizações desde 1994](https://datasus.saude.gov.br/acesso-a-informacao/imunizacoes-desde-1994/)
     - [Painel de Monitoramento de Coberturas Vacinais - Ministério da Saúde](https://infoms.saude.gov.br/extensions/SEIDIGI_DEMAS_VACINACAO_CALENDARIO_NACIONAL_COBERTURA_RESIDENCIA/SEIDIGI_DEMAS_VACINACAO_CALENDARIO_NACIONAL_COBERTURA_RESIDENCIA.html)
     """)
+    st.write("""
+    **Página feita por: [Mateus](https://github.com/mateuskramer)** 
+    """)
