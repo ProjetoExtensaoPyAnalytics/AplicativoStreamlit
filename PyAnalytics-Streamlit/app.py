@@ -17,8 +17,8 @@ def image_to_base64(img_path):
 
 #página inicial
 def pagina_inicial():
-    logo_esquerda_base64 = image_to_base64("logo-py.png")
-    logo_direita = Image.open("logo-ufsc.png")
+    logo_esquerda_base64 = image_to_base64("PyAnalytics-Streamlit/logo-py.png")
+    logo_direita = Image.open("PyAnalytics-Streamlit/logo-ufsc.png")
 
     col1, col2, col3 = st.columns([1, 6, 1])
 
