@@ -5,7 +5,7 @@ import plotly.express as px
 def exibir():
     @st.cache_data
     def carregar_dados():
-        df4 = pd.read_csv('obitos - completo.csv')  # Dados adicionais para óbitos
+        df4 = pd.read_csv('PyAnalytics-Streamlit/obitos_completo.csv')  # Dados adicionais para óbitos
         return df4
     
     def transformar_dados(df):
