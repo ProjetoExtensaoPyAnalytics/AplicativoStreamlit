@@ -5,18 +5,34 @@ import plotly.express as px
 import plotly.graph_objects as go
 import vacina
 import saneamento
-import doencas
+import obitos
 import medicamentos
+import base64
+import internacoes
+
+# Função para converter uma imagem para Base64
+def image_to_base64(img_path):
+    with open(img_path, "rb") as file:
+        return base64.b64encode(file.read()).decode("utf-8")
 
 #página inicial
 def pagina_inicial():
-    logo_esquerda = Image.open("PyAnalytics-Streamlit/logo-py.png")
-    logo_direita = Image.open("PyAnalytics-Streamlit/logo-ufsc.png")
+    logo_esquerda_base64 = image_to_base64("logo-py.png")
+    logo_direita = Image.open("logo-ufsc.png")
 
     col1, col2, col3 = st.columns([1, 6, 1])
 
+
     with col1:
-        st.image(logo_esquerda, width=100)
+        # Exibir a imagem como um link clicável
+        st.markdown(
+            f"""
+            <a href="https://www.linkedin.com/company/pyanalytics/posts/?feedView=all" target="_blank">
+                <img src="data:image/png;base64,{logo_esquerda_base64}" alt="Logo PyAnalytics" style="width:100px;">
+            </a>
+            """,
+            unsafe_allow_html=True
+        )
 
     with col2:
         st.markdown(
@@ -48,24 +64,12 @@ def pagina_inicial():
   
     st.markdown('<div class="subtitle">Acesse informações essenciais de saúde pública de forma prática e rápida.</div>', unsafe_allow_html=True)
 
-    # Caixa de informações
-#    st.markdown(
-#        """
-#        <div style="background-color:#E9F5FF; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
-#            <p style="font-size:16px; color:#333333;">
-#                Este sistema permite que você consulte dados essenciais de saúde pública de Araranguá.
-#                Explore informações sobre vacinas, saneamento, doenças e medicamentos disponíveis no município.
-#           </p>
-#        </div>
-#       """,
-#        unsafe_allow_html=True
-#    )
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.markdown("""
-        <div style="background-color:#939290; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+        <div style="background-color:#939290; padding:20px; border-radius:10px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
             <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Vacinas</h3>
             <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Consulte informações sobre as vacinas disponíveis no município.</p>
         </div>
@@ -84,8 +88,8 @@ def pagina_inicial():
     with col3:
         st.markdown("""
         <div style="background-color:#fff500; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
-            <h3 style="color:#333333; font-size:22px; margin: 0;"> Doenças</h3>
-            <p style="font-size:20px; color:#555555; margin-top:10px;">Veja informações sobre doenças registradas no município.</p>
+            <h3 style="color:#333333; font-size:22px; margin: 0;"> Óbitos</h3>
+            <p style="font-size:20px; color:#555555; margin-top:10px;">Veja informações sobre óbitos registrados no município.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -120,9 +124,9 @@ def pagina_inicial():
     )
 #sidebar
 page = st.sidebar.radio(
-    "Selecione uma página",
-    ["Início", "Vacina", "Saneamento", "Doenças", "Medicamentos"],
-    format_func=lambda x: f" {x}" if x == "Início" else f"{' Vacinas' if x == 'Vacina' else ' Saneamento' if x == 'Saneamento' else ' Doenças' if x == 'Doenças' else ' Medicamentos'}"
+    "Selecione um painel",
+    ["Início", "Vacina", "Saneamento", "Óbitos", "Medicamentos","Internações"],
+    format_func=lambda x: f" {x}" if x == "Início" else f"{' Vacinas' if x == 'Vacina' else ' Saneamento' if x == 'Saneamento' else ' Óbitos' if x == 'Óbitos' else ' Internações' if x == 'Internações' else ' Medicamentos'}"
 )
 
 #vai p/ pagina selecionada
@@ -162,8 +166,10 @@ elif page == "Vacina":
     vacina.exibir()
 elif page == "Saneamento":
     saneamento.exibir()
-elif page == "Doenças":
-    doencas.exibir()
+elif page == "Óbitos":
+    obitos.exibir()
+elif page == "Internações":
+    internacoes.exibir()
 elif page == "Medicamentos":
         # CSS específico para a página inicial
     st.markdown(
