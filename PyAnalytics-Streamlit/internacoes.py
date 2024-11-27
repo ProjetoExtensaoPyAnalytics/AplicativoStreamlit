@@ -59,8 +59,8 @@ def exibir():
         return pd.DataFrame(result)
 
     # Leitura dos arquivos
-    df_cid10 = pd.read_csv('ararangua-cid10.csv', encoding='cp1252', sep=';', skiprows=4)
-    df_lista10 = pd.read_csv('ararangua-lista10.csv', encoding='cp1252', sep=';', skiprows=4)
+    df_cid10 = pd.read_csv('PyAnalytics-Streamlit/ararangua-cid10.csv', encoding='cp1252', sep=';', skiprows=4)
+    df_lista10 = pd.read_csv('PyAnalytics-Streamlit/ararangua-lista10.csv', encoding='cp1252', sep=';', skiprows=4)
 
     # Processamento dos dataframes
     df_cid10 = df_cid10.iloc[:-4, :-1]  # Remove as últimas 4 linhas e a última coluna
