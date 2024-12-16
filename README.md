@@ -1,6 +1,6 @@
 ## Deploy no Streamlit Cloud
 
-A aplicação foi implementada no **Streamlit Cloud** para facilitar o acesso via web. Este guia descreve os passos para realizar o deploy e resolver problemas comuns.
+Esse repositório serve apenas como uma cópia do outro onde está toda a documentação do projeto, com o objetivo de ser o repositório de DEPLOY da aplicação no Streamlit. A aplicação foi implementada no **Streamlit Cloud** para facilitar o acesso via web. Este guia descreve os passos para realizar o deploy e resolver problemas comuns.
 
 ### Passos para o Deploy
 
