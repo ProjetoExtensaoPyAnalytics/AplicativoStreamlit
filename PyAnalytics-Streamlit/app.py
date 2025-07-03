@@ -10,7 +10,16 @@ import medicamentos
 import base64
 import internacoes
 
-# Função para converter uma imagem para Base64
+# Captura parâmetros da URL e atualiza a sessão
+query_params = st.experimental_get_query_params()
+if "page" in query_params:
+    st.session_state.page = query_params["page"][0]
+
+# Inicializa estado da página se necessário
+if "page" not in st.session_state:
+    st.session_state.page = "Início"
+
+# Função para converter imagem para Base64
 def image_to_base64(img_path):
     with open(img_path, "rb") as file:
         return base64.b64encode(file.read()).decode("utf-8")
@@ -55,18 +64,7 @@ def pagina_inicial():
             text-align: center;
             margin-bottom: 25px;
         }
-        .custom-button {
-            background-color: #939290;
-            color: white;
-            font-size: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .custom-button:hover {
-            background-color: #7a7876;
-        }
+        a { text-decoration: none; }
         </style>
         """,
         unsafe_allow_html=True
@@ -77,22 +75,46 @@ def pagina_inicial():
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("🧪 Vacinas"):
-            st.session_state.page = "Vacina"
+        st.markdown("""
+        <a href='?page=Vacina'>
+            <div style="background-color:#939290; padding:20px; border-radius:10px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+                <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Vacinas</h3>
+                <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Consulte informações sobre as vacinas disponíveis no município.</p>
+            </div>
+        </a>
+        """, unsafe_allow_html=True)
 
     with col2:
-        if st.button("🚰 Saneamento"):
-            st.session_state.page = "Saneamento"
+        st.markdown("""
+        <a href='?page=Saneamento'>
+            <div style="background-color:#007cc2; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+                <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Saneamento</h3>
+                <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Confira os dados relacionados ao saneamento básico em Araranguá.</p>
+            </div>
+        </a>
+        """, unsafe_allow_html=True)
 
     col3, col4 = st.columns(2)
 
     with col3:
-        if st.button("⚰️ Óbitos"):
-            st.session_state.page = "Óbitos"
+        st.markdown("""
+        <a href='?page=Óbitos'>
+            <div style="background-color:#fff500; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+                <h3 style="color:#333333; font-size:22px; margin: 0;"> Óbitos</h3>
+                <p style="font-size:20px; color:#555555; margin-top:10px;">Veja informações sobre óbitos registrados no município.</p>
+            </div>
+        </a>
+        """, unsafe_allow_html=True)
 
     with col4:
-        if st.button("💊 Medicamentos"):
-            st.session_state.page = "Medicamentos"
+        st.markdown("""
+        <a href='?page=Medicamentos'>
+            <div style="background-color:#da251c; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+                <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Medicamentos</h3>
+                <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Verifique a disponibilidade de medicamentos na rede pública.</p>
+            </div>
+        </a>
+        """, unsafe_allow_html=True)
 
     st.markdown(
         """
@@ -116,50 +138,41 @@ def pagina_inicial():
         unsafe_allow_html=True
     )
 
-# Inicializa o estado da página
-if "page" not in st.session_state:
-    st.session_state.page = "Início"
-
-# Sidebar
+# Sidebar com sincronização
 page = st.sidebar.radio(
     "Selecione um painel",
     ["Início", "Vacina", "Saneamento", "Óbitos", "Medicamentos", "Internações"],
     index=["Início", "Vacina", "Saneamento", "Óbitos", "Medicamentos", "Internações"].index(st.session_state.page),
-    format_func=lambda x: f" {x}" if x == "Início" else f"{' Vacinas' if x == 'Vacina' else ' Saneamento' if x == 'Saneamento' else ' Óbitos' if x == 'Óbitos' else ' Internações' if x == 'Internações' else ' Medicamentos'}",
-    key="radio"
+    key="radio",
+    format_func=lambda x: f" {x}" if x == "Início" else f"{' Vacinas' if x == 'Vacina' else ' Saneamento' if x == 'Saneamento' else ' Óbitos' if x == 'Óbitos' else ' Internações' if x == 'Internações' else ' Medicamentos'}"
 )
 
-# Atualiza a página atual
+# Atualiza página
 st.session_state.page = page
 
-# Renderiza a página correspondente
-if st.session_state.page == "Início":
-    st.markdown(
-        """
-        <style>
-        .main {background-color: #ffffff; padding: 20px; border-radius: 8px;}
-        p, h1, h2, h3, h4, h5, h6, li, div {color: #333333 !important;}
-        .stMarkdown h1 {color: #007BFF;}
-        .option-icon {font-size: 28px; vertical-align: middle; padding-right: 8px;}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    st.write('<div class="inicio-page">', unsafe_allow_html=True)
-    st.write('</div>', unsafe_allow_html=True)
-    pagina_inicial()
+# CSS global
+st.markdown(
+    """
+    <style>
+    .main {background-color: #ffffff; padding: 20px; border-radius: 8px;}
+    p, h1, h2, h3, h4, h5, h6, li, div {color: #333333 !important;}
+    .stMarkdown h1 {color: #007BFF;}
+    .option-icon {font-size: 28px; vertical-align: middle; padding-right: 8px;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
+# Roteamento das páginas
+if st.session_state.page == "Início":
+    pagina_inicial()
 elif st.session_state.page == "Vacina":
     vacina.exibir()
-
 elif st.session_state.page == "Saneamento":
     saneamento.exibir()
-
 elif st.session_state.page == "Óbitos":
     obitos.exibir()
-
-elif st.session_state.page == "Internações":
-    internacoes.exibir()
-
 elif st.session_state.page == "Medicamentos":
     medicamentos.exibir()
+elif st.session_state.page == "Internações":
+    internacoes.exibir()
