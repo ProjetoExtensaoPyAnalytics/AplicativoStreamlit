@@ -134,14 +134,21 @@ def pagina_inicial():
     unsafe_allow_html=True
     )
 
-# Obter o parâmetro da URL se existir
-query_params = st.experimental_get_query_params()
-if 'page' in query_params:
-    page = query_params['page'][0]
-else:
-    page = st.sidebar.radio(
+# Configuração do menu lateral
+with st.sidebar:
+    st.title("Navegação")
+    
+    # Obter o parâmetro da URL se existir
+    query_params = st.query_params
+    if 'page' in query_params:
+        default_index = ["Início", "Vacina", "Saneamento", "Óbitos", "Medicamentos", "Internações"].index(query_params['page'])
+    else:
+        default_index = 0
+    
+    page = st.radio(
         "Selecione um painel",
         ["Início", "Vacina", "Saneamento", "Óbitos", "Medicamentos", "Internações"],
+        index=default_index,
         format_func=lambda x: f" {x}" if x == "Início" else f"{' Vacinas' if x == 'Vacina' else ' Saneamento' if x == 'Saneamento' else ' Óbitos' if x == 'Óbitos' else ' Internações' if x == 'Internações' else ' Medicamentos'}"
     )
 
@@ -159,9 +166,6 @@ if page == "Início":
         """,
         unsafe_allow_html=True
     )
-    # HTML específico para a página inicial
-    st.write('<div class="inicio-page">', unsafe_allow_html=True)
-    st.write('</div>', unsafe_allow_html=True)
     pagina_inicial()
 elif page == "Vacina":
     # CSS específico para a página de vacinas
@@ -176,9 +180,6 @@ elif page == "Vacina":
         """,
         unsafe_allow_html=True
     )
-    # HTML específico para a página de vacinas
-    st.write('<div class="inicio-page">', unsafe_allow_html=True)
-    st.write('</div>', unsafe_allow_html=True)
     vacina.exibir()
 elif page == "Saneamento":
     saneamento.exibir()
@@ -199,9 +200,6 @@ elif page == "Medicamentos":
         """,
         unsafe_allow_html=True
     )
-    # HTML específico para a página de medicamentos
-    st.write('<div class="inicio-page">', unsafe_allow_html=True)
-    st.write('</div>', unsafe_allow_html=True)
     medicamentos.exibir()
 
 # Esse é o tema do streamlit usado
