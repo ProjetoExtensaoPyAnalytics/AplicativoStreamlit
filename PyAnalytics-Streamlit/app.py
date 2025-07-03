@@ -1,21 +1,18 @@
 import streamlit as st
 from PIL import Image
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
 import vacina
 import saneamento
 import obitos
 import medicamentos
-import base64
 import internacoes
+import base64
 
-# Captura parâmetros da URL e atualiza a sessão
-query_params = st.experimental_get_query_params()
+# Captura parâmetros da URL (caso queira usar links no futuro)
+query_params = st.query_params
 if "page" in query_params:
-    st.session_state.page = query_params["page"][0]
+    st.session_state.page = query_params["page"]
 
-# Inicializa estado da página se necessário
+# Inicializa estado da página se não existir
 if "page" not in st.session_state:
     st.session_state.page = "Início"
 
@@ -24,7 +21,7 @@ def image_to_base64(img_path):
     with open(img_path, "rb") as file:
         return base64.b64encode(file.read()).decode("utf-8")
 
-# Página inicial
+# Página inicial com containers clicáveis
 def pagina_inicial():
     logo_esquerda_base64 = image_to_base64("PyAnalytics-Streamlit/logo-py.png")
     logo_direita = Image.open("PyAnalytics-Streamlit/logo-ufsc.png")
@@ -64,7 +61,10 @@ def pagina_inicial():
             text-align: center;
             margin-bottom: 25px;
         }
-        a { text-decoration: none; }
+        .clickable-container {
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
         </style>
         """,
         unsafe_allow_html=True
@@ -75,70 +75,64 @@ def pagina_inicial():
     col1, col2 = st.columns(2)
 
     with col1:
+        if st.button(" ", key="card_vacina"):
+            st.session_state.page = "Vacina"
         st.markdown("""
-        <a href='?page=Vacina'>
-            <div style="background-color:#939290; padding:20px; border-radius:10px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
-                <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Vacinas</h3>
-                <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Consulte informações sobre as vacinas disponíveis no município.</p>
-            </div>
-        </a>
+        <div class="clickable-container" style="background-color:#939290; padding:20px; border-radius:10px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+            <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Vacinas</h3>
+            <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Consulte informações sobre as vacinas disponíveis no município.</p>
+        </div>
         """, unsafe_allow_html=True)
 
     with col2:
+        if st.button(" ", key="card_saneamento"):
+            st.session_state.page = "Saneamento"
         st.markdown("""
-        <a href='?page=Saneamento'>
-            <div style="background-color:#007cc2; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
-                <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Saneamento</h3>
-                <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Confira os dados relacionados ao saneamento básico em Araranguá.</p>
-            </div>
-        </a>
+        <div class="clickable-container" style="background-color:#007cc2; padding:20px; border-radius:10px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+            <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Saneamento</h3>
+            <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Confira os dados relacionados ao saneamento básico em Araranguá.</p>
+        </div>
         """, unsafe_allow_html=True)
 
     col3, col4 = st.columns(2)
 
     with col3:
+        if st.button(" ", key="card_obitos"):
+            st.session_state.page = "Óbitos"
         st.markdown("""
-        <a href='?page=Óbitos'>
-            <div style="background-color:#fff500; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
-                <h3 style="color:#333333; font-size:22px; margin: 0;"> Óbitos</h3>
-                <p style="font-size:20px; color:#555555; margin-top:10px;">Veja informações sobre óbitos registrados no município.</p>
-            </div>
-        </a>
+        <div class="clickable-container" style="background-color:#fff500; padding:20px; border-radius:10px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+            <h3 style="color:#333333; font-size:22px; margin: 0;"> Óbitos</h3>
+            <p style="font-size:20px; color:#555555; margin-top:10px;">Veja informações sobre óbitos registrados no município.</p>
+        </div>
         """, unsafe_allow_html=True)
 
     with col4:
+        if st.button(" ", key="card_medicamentos"):
+            st.session_state.page = "Medicamentos"
         st.markdown("""
-        <a href='?page=Medicamentos'>
-            <div style="background-color:#da251c; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
-                <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Medicamentos</h3>
-                <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Verifique a disponibilidade de medicamentos na rede pública.</p>
-            </div>
-        </a>
+        <div class="clickable-container" style="background-color:#da251c; padding:20px; border-radius:10px; box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); text-align:center;">
+            <h3 style="color:#FFFFFF; font-size:22px; margin: 0;"> Medicamentos</h3>
+            <p style="font-size:20px; color:#E0E0E0; margin-top:10px;">Verifique a disponibilidade de medicamentos na rede pública.</p>
+        </div>
         """, unsafe_allow_html=True)
 
-    st.markdown(
-        """
-        <div style="text-align: center; font-size: 14px; color: #333;">
-        <br>
-        <p>Use o menu de navegação à esquerda para acessar cada seção detalhadamente.</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+    <div style="text-align: center; font-size: 14px; color: #333;">
+    <br>
+    <p>Use o menu de navegação à esquerda para acessar cada seção detalhadamente.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown(
-        """
-        <hr style="margin-top: 25px; margin-bottom: 25px; border: none; border-top: 2px solid #CCCCCC;">
-        <div style="text-align: center; color: #666666; font-size: 16px;">
-            Esta aplicação é uma iniciativa do <strong><a href="https://www.linkedin.com/company/pyanalytics/posts/?feedView=all" target="_blank" style="color: #0066CC; text-decoration: none;">PyAnalytics</a></strong>, 
-            projeto de extensão da Universidade Federal de Santa Catarina, Campus Araranguá, coordenado pela Professora Andréa Sabedra Bordin. 
-            O objetivo é promover o acesso a dados de saúde pública em Araranguá e contribuir com a sociedade através de soluções de análise de dados. Você pode ver todo o código fonte dessa aplicação em nosso <strong><a href="https://github.com/ProjetoExtensaoPyAnalytics" target="_blank" style="color: #0066CC; text-decoration: none;">Github.</a></strong>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+    <hr style="margin-top: 25px; margin-bottom: 25px; border: none; border-top: 2px solid #CCCCCC;">
+    <div style="text-align: center; color: #666666; font-size: 16px;">
+        Esta aplicação é uma iniciativa do <strong><a href="https://www.linkedin.com/company/pyanalytics/posts/?feedView=all" target="_blank" style="color: #0066CC; text-decoration: none;">PyAnalytics</a></strong>, 
+        projeto de extensão da Universidade Federal de Santa Catarina, Campus Araranguá, coordenado pela Professora Andréa Sabedra Bordin. 
+        O objetivo é promover o acesso a dados de saúde pública em Araranguá e contribuir com a sociedade através de soluções de análise de dados. Você pode ver todo o código fonte dessa aplicação em nosso <strong><a href="https://github.com/ProjetoExtensaoPyAnalytics" target="_blank" style="color: #0066CC; text-decoration: none;">Github.</a></strong>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Sidebar com sincronização
+# Sidebar sincronizada com o estado da página
 page = st.sidebar.radio(
     "Selecione um painel",
     ["Início", "Vacina", "Saneamento", "Óbitos", "Medicamentos", "Internações"],
@@ -147,10 +141,10 @@ page = st.sidebar.radio(
     format_func=lambda x: f" {x}" if x == "Início" else f"{' Vacinas' if x == 'Vacina' else ' Saneamento' if x == 'Saneamento' else ' Óbitos' if x == 'Óbitos' else ' Internações' if x == 'Internações' else ' Medicamentos'}"
 )
 
-# Atualiza página
+# Atualiza a página
 st.session_state.page = page
 
-# CSS global
+# Aplica tema e CSS global
 st.markdown(
     """
     <style>
@@ -163,7 +157,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Roteamento das páginas
+# Renderiza a página escolhida
 if st.session_state.page == "Início":
     pagina_inicial()
 elif st.session_state.page == "Vacina":
